@@ -31,8 +31,12 @@ with app.app_context():
 
 @app.route('/')
 def home():
-	contenedores = Contenedor.query.all()
+	contenedores = Contenedor.query.filter_by(Contenedor.active == 'Y')
 	return render_template('home.html', containers = contenedores)
+
+@app.route('/filtro')
+def filtro():
+	pass
 
 @app.route('/cargar')
 def cargar():
