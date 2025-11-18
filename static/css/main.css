@@ -1,0 +1,37 @@
+.form-section {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+.file-upload {
+    border: 2px dashed #ced4da;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 15px;
+    background-color: #f8f9fa;
+}
+.file-upload:hover {
+    border-color: #86b7fe;
+}
+.file-upload input[type="file"] {
+    display: none;
+}
+.file-upload-label {
+    cursor: pointer;
+}
+.file-name {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+
+
+
+
+
+
+
+

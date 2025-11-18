@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+	
+	{% block title %} Carga de datos {% endblock %}
+
+	{% block content %}
+	
+	<!-- Area de visualización de contenedores -->
+
+	<h3>Contenedores registrados</h3>
+	<hr>
+	<div class="container">
+		<div class="row">
+			<div class="col-3">
+				<div class="input-group input-group-sm mb-3">
+  					<span class="input-group-text" id="inputGroup-sizing-sm">Buscador</span>
+  					<input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<table class="table table-sm">
+		<thead>
+			<tr>
+				<th scope="col">Contenedor</th>
+				<th scope="col">ISO</th>
+				<th scope="col">GRADE</th>
+				<th scope="col">STATUS</th>
+				<th scope="col">OFAC</th>
+				<th scope="col">BLOCK</th>
+				<th scope="col">TRASLADO</th>
+				<th scope="col">REMARKS</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+				{% if containers %}
+				{% for c in containers %}
+				<tr>
+				<td scope="col">{{c.containerNo}}</td>
+				<td scope="col">{{c.iso}}</td>
+				<td scope="col">{{c.grado}}</td>
+				<td scope="col">{{c.status}}</td>
+				<td scope="col">{{c.ofacc}}</td>
+				<td scope="col">{{c.block}}</td>
+				<td scope="col">{{c.traslado}}</td>
+				<td scope="col text-sm">{{c.remark}}</td>
+				</tr>
+				{% endfor %}
+				{% endif %}
+
+			
+		</tbody>
+	</table>
+
+	
+	
+		{% endblock %}

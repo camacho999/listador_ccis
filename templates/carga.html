@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+    {% block content %}
+    <div class="container mt-5">
+        <h2 class="mb-4 text-center">Carga de Información</h2>
+        
+        <div class="row">
+
+            <div class="col-md-6">
+                
+                <!-- Columna derecha - Carga de archivos -->
+                    <div class="form-section">
+                        <h4 class="mb-3"><i class="fas fa-file-upload me-2"></i>Carga de Archivos</h4>
+                        
+                        <!-- Carga de inventario -->
+                        <div class="file-upload">
+                            <form action="/upload_inventario" method="POST" enctype="multipart/form-data">
+                                <label for="inventarioFile" class="file-upload-label">
+                                    <i class="fas fa-file-excel fa-3x mb-3 text-success"></i>
+                                    <h5>Carga de Inventario</h5>
+                                    <p class="text-muted">Seleccione archivo Excel</p>
+                                    <span class="btn btn-primary">Seleccionar Archivo</span>
+                                </label>
+
+                                <input type="file" id="inventarioFile" name="archivo" class="form-control" accept=".xlsx, .xls" required>
+                                <div id="inventarioFileName" class="file-name">Ningún archivo seleccionado</div>
+                                <button type="submit" class="btn btn-success btn-lg"><i class="fas fa-upload me-2"></i>Cargar Inventario</button>
+                            </form>
+                        </div>
+                        
+                        <!-- Carga de bloqueados -->
+                        <div class="file-upload">
+                            <label for="bloqueadosFile" class="file-upload-label">
+                                <i class="fas fa-file-excel fa-3x mb-3 text-success"></i>
+                                <h5>Carga de Bloqueados</h5>
+                                <p class="text-muted">Seleccione archivo Excel</p>
+                                <span class="btn btn-primary">Seleccionar Archivo</span>
+                                
+                            </label>
+                            <form action="/update_blok" method="POST" enctype="multipart/form-data">
+                                <input type="file" id="bloqueadosFile" name="archivo" class="form-control" accept=".xlsx, .xls" required>
+                                <div id="bloqueadosFileName" class="file-name">Ningún archivo seleccionado</div>
+                                <button type="submit" class="btn btn-success btn-lg"> <i class="fas fa-upload me-2"></i>Cargar Bloqueados</button>
+                            </form>
+                        </div>
+                        
+                        <!-- Carga de traslado -->
+                        <div class="file-upload">
+                            <label for="trasladoFile" class="file-upload-label">
+                                <i class="fas fa-file-excel fa-3x mb-3 text-success"></i>
+                                <h5>Carga de Traslado</h5>
+                                <p class="text-muted">Seleccione archivo Excel</p>
+                                <span class="btn btn-primary">Seleccionar Archivo</span>
+                                
+                            </label>
+                            <form action="/traslado" method="POST" enctype="multipart/form-data">
+                            <input type="file" id="trasladoFile" name="archivo" class="form-control" accept=".xlsx, .xls" required>
+                                <div id="trasladoFileName" class="file-name">Ningún archivo seleccionado</div>
+                                <button type="submit" class="btn btn-success btn-lg"><i class="fas fa-upload me-2"></i>Cargar Taslado</button>
+                            </form>
+                        </div>
+                    </div>
+            </div>
+            <div class="col-6">
+                <div class="form-section">
+                     <div class="file-upload">
+                            <label for="ofacFile" class="file-upload-label">
+                                <i class="fas fa-file-excel fa-3x mb-3 text-success"></i>
+                                <h5>Actualizar Ofac</h5>
+                                <p class="text-muted">Seleccione archivo Excel</p>
+                                <span class="btn btn-primary">Seleccionar Archivo</span>
+                            </label>
+                            <form action="/update_ofac" method="POST" enctype="multipart/form-data">
+                                <input type="file" id="ofacFile" name="archivo" class="form-control" accept=".xlsx, .xls" required>
+                                <div id="ofacFileName" class="file-name">Ningún archivo seleccionado</div>
+                                <button type="submit" class="btn btn-success btn-lg"><i class="fas fa-upload me-2"></i>Actualizar Ofac</button>
+                            </form>
+                        </div>
+                </div>
+            </div>
+            </div>
+        
+            
+            
+           
+            <br>
+            <br>
+        
+    </div>
+
+    {% endblock %}
+      
