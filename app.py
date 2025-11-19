@@ -31,7 +31,7 @@ with app.app_context():
 
 @app.route('/')
 def home():
-	contenedores = Contenedor.query.filter_by(Contenedor.active == 'Y')
+	contenedores = Contenedor.query.filter_by(active = 'Y')
 	return render_template('home.html', containers = contenedores)
 
 @app.route('/filtro')
