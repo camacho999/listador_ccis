@@ -36,7 +36,30 @@ def home():
 
 @app.route('/filtro')
 def filtro():
-	pass
+	  # Obtener arrays de valores EXCLUIDOS (los desmarcados)
+    isos_excluidos = request.args.getlist('iso')
+    grados_excluidos = request.args.getlist('grado')
+    statuses_excluidos = request.args.getlist('status')
+    ofacs_excluidos = request.args.getlist('ofac')
+
+        # Construir consulta base
+    query = Contenedor.query
+    
+    # Aplicar filtros de EXCLUSIÓN (NOT IN)
+    if isos_excluidos:
+        query = query.filter(~Contenedor.iso.in_(isos_excluidos))
+    if grados_excluidos:
+        query = query.filter(~Contenedor.grado.in_(grados_excluidos))
+    if statuses_excluidos:
+        query = query.filter(~Contenedor.status.in_(statuses_excluidos))
+    if ofacs_excluidos:
+        query = query.filter(~Contenedor.ofac.in_(ofacs_excluidos))
+    
+    # Ejecutar consulta
+   
+    contenedores_filtrados = query.all()
+    
+    return render_template('filtro.html', containers=contenedores_filtrados)
 
 @app.route('/cargar')
 def cargar():

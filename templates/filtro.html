@@ -1,0 +1,33 @@
+<table class="table table-sm" id="tabla-contenedores">
+		<thead>
+			<tr>
+				<th scope="col">Contenedor</th>
+				<th scope="col">ISO</th>
+				<th scope="col">GRADE</th>
+				<th scope="col">STATUS</th>
+				<th scope="col">OFAC</th>
+				<th scope="col">BLOCK</th>
+				<th scope="col">TRASLADO</th>
+				<th scope="col">REMARKS</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+				{% if containers %}
+				{% for c in containers %}
+				<tr>
+				<td scope="col">{{c.containerNo}}</td>
+				<td scope="col">{{c.iso}}</td>
+				<td scope="col">{{c.grado}}</td>
+				<td scope="col">{{c.status}}</td>
+				<td scope="col">{{c.ofacc}}</td>
+				<td scope="col">{{c.block}}</td>
+				<td scope="col">{{c.traslado}}</td>
+				<td scope="col text-sm">{{c.remark}}</td>
+				</tr>
+				{% endfor %}
+				{% endif %}
+
+			
+		</tbody>
+	</table>

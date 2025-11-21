@@ -13,7 +13,7 @@
 			<div class="col-3">
 				<div class="input-group input-group-sm mb-3">
   					<span class="input-group-text" id="inputGroup-sizing-sm">Buscador</span>
-  					<input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+  					<input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" id="buscador">
 				</div>
 			</div>
 			<div class="col border">
@@ -24,50 +24,50 @@
 				<div class="row">
 					<div class="col">
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="22G1" id="22G1" name="ISO">
-  							<label class="form-check-label" for="22G1">22G1</label>
+  							<input class="form-check-input" type="checkbox" name="iso" value="22G1" id="iso_22G1" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="iso_22G1">22G1</label>
 						</div>
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="22U1" id="22U1" name="ISO">
-  							<label class="form-check-label" for="22U1">22U1</label>
+  							<input class="form-check-input" type="checkbox" name="iso" value="22U1" id="iso_22U1" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="iso_22U1">22U1</label>
 						</div>
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="22P3" id="22P3" name="ISO">
-  							<label class="form-check-label" for="22P3">22P3</label>
+  							<input class="form-check-input" type="checkbox" name="iso" value="22P3" id="iso_22P3" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="iso_22P3">22P3</label>
 						</div>
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="22R1" id="22R1" name="ISO">
-  							<label class="form-check-label" for="22R1">22R1</label>
-						</div>
-					</div>
-					<!-- 40 -->
-					<div class="col">
-						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="42G1" id="42G1" name="ISO">
-  							<label class="form-check-label" for="22G1">42G1</label>
-						</div>
-						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="42U1" id="42U1" name="ISO">
-  							<label class="form-check-label" for="42U1">42U1</label>
-						</div>
-						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="42P3" id="42P3" name="ISO">
-  							<label class="form-check-label" for="42P3">42P3</label>
-						</div>
-						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="45R1" id="45R1" name="ISO">
-  							<label class="form-check-label" for="45R1">45R1</label>
+  							<input class="form-check-input" type="checkbox" name="iso" value="22R1" id="iso_22R1" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="iso_22R1">22R1</label>
 						</div>
 					</div>
-					<!-- 45 -->
+					
 					<div class="col">
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="45G1" id="45G1" name="ISO">
-  							<label class="form-check-label" for="45G1">45G1</label>
+  							<input class="form-check-input" type="checkbox" name="iso" value="42G1" id="iso_42G1" checked checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="iso_22G1">42G1</label>
 						</div>
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="45P3" id="45P3" name="ISO">
-  							<label class="form-check-label" for="45P3">45P3</label>
+  							<input class="form-check-input" type="checkbox" value="42U1" name="iso" id="iso_42U1" checked checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="iso_42U1">42U1</label>
+						</div>
+						<div class="form-check">
+  							<input class="form-check-input" type="checkbox" name="iso" value="42P3" id="iso_42P3" checked checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="iso_42P3">42P3</label>
+						</div>
+						<div class="form-check">
+  							<input class="form-check-input" type="checkbox" name="iso" value="45R1" id="iso_45R1" checked checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="iso_45R1">45R1</label>
+						</div>
+					</div>
+					
+					<div class="col">
+						<div class="form-check">
+  							<input class="form-check-input" type="checkbox" name="iso" value="45G1" id="iso_45G1" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="iso_45G1">45G1</label>
+						</div>
+						<div class="form-check">
+  							<input class="form-check-input" type="checkbox" name="iso" value="45P3" id="iso_45P3" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="iso_45P3">45P3</label>
 						</div>
 						
 					</div>
@@ -87,34 +87,38 @@
 				<div class="row">
 					<div class="col">
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="AV" id="AV" name="STATUS">
-  							<label class="form-check-label" for="AV">AV</label>
+  							<input class="form-check-input" type="checkbox" value="AV" id="status_AV" name="status" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="status_AV">AV</label>
 						</div>
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="AA" id="AA" name="STATUS">
-  							<label class="form-check-label" for="AA">AA</label>
+  							<input class="form-check-input" type="checkbox" value="AA" id="status_AA" name="status" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="status_AA">AA</label>
 						</div>
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="DAM" id="DAM" name="STATUS">
-  							<label class="form-check-label" for="DAM">DAM</label>
+  							<input class="form-check-input" type="checkbox" value="DAM" id="status_DAM" name="status" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="status_DAM">DAM</label>
 						</div>
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="DAPP" id="DAPP" name="STATUS">
-  							<label class="form-check-label" for="DAPP">DAPP</label>
+  							<input class="form-check-input" type="checkbox" value="DAPP" id="status_DAPP" name="status" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="status_DAPP">DAPP</label>
 						</div>
 					</div>
 					<div class="col">
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="NR" id="NR" name="STATUS">
-  							<label class="form-check-label" for="NR">NR</label>
+  							<input class="form-check-input" type="checkbox" value="NR" id="status_SNR" name="status" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="status_SNR">NR</label>
 						</div>
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="UR" id="UR" name="STATUS">
-  							<label class="form-check-label" for="UR">UR</label>
+  							<input class="form-check-input" type="checkbox" value="UR" id="status_UR" name="status" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="status_UR">UR</label>
 						</div>
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="AWC" id="AWC" name="STATUS">
-  							<label class="form-check-label" for="AWC">AWC</label>
+  							<input class="form-check-input" type="checkbox" value="AWC" id="status_AWC" name="status" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="status_AWC">AWC</label>
+						</div>
+						<div class="form-check">
+  							<input class="form-check-input" type="checkbox" value="TPC" id="status_TPC" name="status" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="status_TPC">TPC</label>
 						</div>
 					</div>
 				</div>
@@ -132,48 +136,44 @@
 				<div class="row">
 					<div class="col">
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="GC" id="GC" name="GRADO">
-  							<label class="form-check-label" for="GC">GC</label>
+  							<input class="form-check-input" type="checkbox" value="GC" id="grado_GC" name="grado" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="grado_GC">GC</label>
 						</div>
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="FQ" id="FQ" name="GRADO">
-  							<label class="form-check-label" for="FQ">FQ</label>
+  							<input class="form-check-input" type="checkbox" value="FQ" id="grado_FQ" name="grado" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="grado_FQ">FQ</label>
 						</div>
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="FLEXI" id="FLEXI" name="GRADO">
-  							<label class="form-check-label" for="FLEXI">FLEXI</label>
+  							<input class="form-check-input" type="checkbox" value="FLEXI" id="grado_FLEXI" name="grado" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="grado_FLEXI">FLEXI</label>
 						</div>
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="DRY" id="DRY" name="GRADO">
-  							<label class="form-check-label" for="DRY">DRY</label>
-						</div>
-					</div>
-					<div class="col">
-						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="SCRAP" id="SCRAP" name="GRADO">
-  							<label class="form-check-label" for="SCRAP">SCRAP</label>
-						</div>
-						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="SALE" id="SALE" name="GRADO">
-  							<label class="form-check-label" for="SALE">SALE</label>
-						</div>
-						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="PHARMA" id="PHARMA" name="GRADO">
-  							<label class="form-check-label" for="PHARMA">PHARMA</label>
-						</div>
-						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="NR" id="NR" name="GRADO">
-  							<label class="form-check-label" for="DRY">NR</label>
+  							<input class="form-check-input" type="checkbox" value="DRY" id="grado_DRY" name="grado" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="grado_DRY">DRY</label>
 						</div>
 					</div>
 					<div class="col">
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="TL" id="NR" name="GRADO">
-  							<label class="form-check-label" for="NR">TL</label>
+  							<input class="form-check-input" type="checkbox" value="SCRAP" id="grado_SCRAP" name="grado" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="grado_SCRAP">SCRAP</label>
 						</div>
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="ALL" id="TL" name="GRADO">
-  							<label class="form-check-label" for="TL">TODOS</label>
+  							<input class="form-check-input" type="checkbox" value="SALE" id="grado_SALE" name="grado" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="grado_SALE">SALE</label>
+						</div>
+						<div class="form-check">
+  							<input class="form-check-input" type="checkbox" value="PHARMA" id="grado_PHARMA" name="grado" checked>
+  							<label class="form-check-label" for="grado_PHARMA">PHARMA</label>
+						</div>
+						<div class="form-check">
+  							<input class="form-check-input" type="checkbox" value="NR" id="grado_NR" name="grado" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="grado_NR">NR</label>
+						</div>
+					</div>
+					<div class="col">
+						<div class="form-check">
+  							<input class="form-check-input" type="checkbox" value="TL" id="grado_TL" name="grado" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<label class="form-check-label" for="grado_TL">TL</label>
 						</div>
 					</div>
 				</div>
@@ -182,17 +182,22 @@
 			<div class="row justify-content-center mt-2">
 					<div class="col-3">
 						<div class="form-check">
-  							<input class="form-check-input" type="radio" value="" id="OFAC C">
-  							<label class="form-check-label" for="OFAC C">OFAC C</label>
+  							<input class="form-check-input" type="checkbox" value="Y" id="y_ofacc" name="ofacc" >
+  							<label class="form-check-label" for="y_ofacc">OFAC C</label>
 						</div>
 					</div>
+					<div class="col">
+						<button class="btn btn-outline-primary" onclick="reset()">Todos</button>
+					</div>
 				</div>
+
 
 		
 		</div>
 		
 		<hr>
-	<table class="table table-sm">
+	<div class="loading" id="spinner" style="display: none;"> Cargando ...</div>	
+	<table class="table table-sm" id="tabla-contenedores">
 		<thead>
 			<tr>
 				<th scope="col">Contenedor</th>
@@ -227,5 +232,44 @@
 	</table>
 
 	
+<script>
+       document.addEventListener('DOMContentLoaded', function() {
+       	document.body.addEventListener('htmx:configRequest', function(event) {
+	        // Enviar los checkboxes DESMARCADOS (excluidos)
+	        const checkboxesNoMarcados = document.querySelectorAll('input[type="checkbox"]:not(:checked)');
+	        const excluidos = {};
+        
+        	checkboxesNoMarcados.forEach(checkbox => {
+	            const name = checkbox.name;
+	            if (!excluidos[name]) {
+	                excluidos[name] = [];
+	            }
+	            excluidos[name].push(checkbox.value);
+        	});
+        
+        // Agregar parámetros a la solicitud HTMX
+        	for (const key in excluidos) {
+            	event.detail.parameters[key] = excluidos[key];
+        	}
+    	});
+	});
+
+       function reset() {
+    		// Marcar todos los checkboxes
+    		document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    		    checkbox.checked = true;
+    		});
+    		// Disparar HTMX para recargar
+    		htmx.trigger('input[type="checkbox"]', 'change');
+		}
+
+    </script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
 	
 		{% endblock %}
+
+
+
