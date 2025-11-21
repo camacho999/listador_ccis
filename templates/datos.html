@@ -187,7 +187,7 @@
 						</div>
 					</div>
 					<div class="col">
-						<button class="btn btn-outline-primary" onclick="reset()">Todos</button>
+						<button class="btn btn-outline-primary" hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="click">Todos</button>
 					</div>
 				</div>
 
@@ -260,7 +260,7 @@
     		    checkbox.checked = true;
     		});
     		// Disparar HTMX para recargar
-    		htmx.trigger('input[type="checkbox"]', 'change');
+    		//htmx.trigger('input[type="checkbox"]', 'change');
 		}
 
     </script>
