@@ -40,7 +40,8 @@ def filtro():
     isos_excluidos = request.args.getlist('iso')
     grados_excluidos = request.args.getlist('grado')
     statuses_excluidos = request.args.getlist('status')
-    ofacs_excluidos = request.args.getlist('ofac')
+    solo_ofac = request.args.get('ofac')
+
 
         # Construir consulta base
     query = Contenedor.query
@@ -52,8 +53,11 @@ def filtro():
         query = query.filter(~Contenedor.grado.in_(grados_excluidos))
     if statuses_excluidos:
         query = query.filter(~Contenedor.status.in_(statuses_excluidos))
-    if ofacs_excluidos:
-        query = query.filter(~Contenedor.ofac.in_(ofacs_excluidos))
+    
+    #OFAC
+    if solo_ofac:
+    	query = query.filter(Contenedor.ofacc == 'Y')
+
     
     # Ejecutar consulta
    
