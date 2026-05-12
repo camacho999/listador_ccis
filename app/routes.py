@@ -6,8 +6,12 @@ import pandas as pd
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from .models import Contenedor
 from . import db
+import os
 
-main_bp = Blueprint('main', __name__)
+# Obtener la ruta base del proyecto
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+main_bp = Blueprint('main', __name__, template_folder=os.path.join(BASE_DIR, 'templates'))
 
 
 @main_bp.route('/')
