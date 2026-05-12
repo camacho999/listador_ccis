@@ -10,7 +10,9 @@ db = SQLAlchemy()
 
 def create_app(config_class=None):
     """Factory function para crear la aplicación Flask."""
-    app = Flask(__name__)
+    app = Flask(__name__, 
+                static_folder='../static', 
+                template_folder='../templates')
     
     # Configuración por defecto
     if config_class:
