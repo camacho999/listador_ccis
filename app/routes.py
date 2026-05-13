@@ -73,7 +73,7 @@ def upload_inventario():
         
         if not archivo or not archivo.filename.endswith('.xls'):
             flash('El formato del archivo no es válido, solo se permite archivos xls.', 'warning')
-            return redirect(url_for('cargar'))
+            return redirect(url_for('main.cargar'))
         
         try:
             if container_db:
@@ -141,9 +141,9 @@ def upload_inventario():
             print(e)
             flash(f'Error al realizar la carga masiva: {str(e)}', 'danger')
 
-        return redirect(url_for('cargar'))
+        return redirect(url_for('main.cargar'))
     
-    return redirect(url_for('cargar'))
+    return redirect(url_for('main.cargar'))
 
 
 @main_bp.route('/update_blok', methods=['POST'])
