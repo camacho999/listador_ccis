@@ -1,64 +1,61 @@
+```gitignore
 # Compiled and build artifacts
 *.pyc
 __pycache__/
 *.o
 *.obj
-*.out
-*.dll
-*.so
-*.a
+dist/
+build/
 
 # Dependencies
 .venv/
 venv/
-.env
-.env.local
-.env.*
+node_modules/
 
 # Logs and temp files
 *.log
 *.tmp
 *.swp
 
+# Environment
+.env
+.env.local
+*.env.*
+
 # Editors
 .vscode/
 .idea/
 
-# Build and distribution
-build/
-dist/
-target/
-.gradle/
-.mypy_cache/
-.pytest_cache/
+# Coverage reports
 coverage/
 htmlcov/
-*.coverage
+.coverage
 
-# System files
+# Python specific
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+
+# Web specific
+*.min.js
+*.min.css
+.sass-cache/
+
+# Backup files
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
-
-# Compressed files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
+```
