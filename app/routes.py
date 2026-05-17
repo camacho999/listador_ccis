@@ -26,25 +26,25 @@ def home():
 @main_bp.route('/filtro')
 def filtro():
     """Filtrar contenedores según criterios seleccionados."""
-    # Obtener arrays de valores EXCLUIDOS (los desmarcados)
-    isos_excluidos = request.args.getlist('iso')
-    grados_excluidos = request.args.getlist('grado')
-    statuses_excluidos = request.args.getlist('status')
-    solo_ofac = request.args.get('ofac')
+    # Obtener arrays de valores INCLUIDOS (los marcados)
+    isos_incluidos = request.args.getlist('iso')
+    grados_incluidos = request.args.getlist('grado')
+    statuses_incluidos = request.args.getlist('status')
+    solo_ofac = request.args.get('ofacc')
 
     # Construir consulta base
     query = Contenedor.query
     
-    # Aplicar filtros de EXCLUSIÓN (NOT IN)
-    if isos_excluidos:
-        query = query.filter(~Contenedor.iso.in_(isos_excluidos))
-    if grados_excluidos:
-        query = query.filter(~Contenedor.grado.in_(grados_excluidos))
-    if statuses_excluidos:
-        query = query.filter(~Contenedor.status.in_(statuses_excluidos))
+    # Aplicar filtros de INCLUSIÓN (IN) - solo si hay valores seleccionados
+    if isos_incluidos:
+        query = query.filter(Contenedor.iso.in_(isos_incluidos))
+    if grados_incluidos:
+        query = query.filter(Contenedor.grado.in_(grados_incluidos))
+    if statuses_incluidos:
+        query = query.filter(Contenedor.status.in_(statuses_incluidos))
     
-    # Filtro OFAC
-    if solo_ofac:
+    # Filtro OFAC - solo mostrar los que tienen ofacc = 'Y'
+    if solo_ofac == 'Y':
         query = query.filter(Contenedor.ofacc == 'Y')
 
     # Ejecutar consulta
