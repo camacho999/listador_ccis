@@ -125,6 +125,32 @@ def generar_filtrar():
 
 
 @main_bp.route('/cargar')
+
+@main_bp.route('/generar/buscar/<container_no>')
+def buscar_contenedor(container_no):
+    """Buscar un contenedor específico por número."""
+    # Buscar contenedores que coincidan parcial o exactamente con el número proporcionado
+    search_term = f"%{container_no}%"
+    query = Contenedor.query.filter(Contenedor.containerNo.like(search_term))
+    
+    # Ejecutar consulta
+    containers = query.all()
+    
+    # Preparar respuesta JSON
+    result = []
+    for c in containers:
+        result.append({
+            'containerNo': c.containerNo,
+            'iso': c.iso,
+            'grado': c.grado,
+            'status': c.status,
+            'ofacc': c.ofacc,
+            'block': c.block,
+            'traslado': c.traslado,
+            'remark': c.remark or ''
+        })
+    
+    return {'containers': result, 'count': len(result)}
 def cargar():
     """Página para carga de archivos."""
     return render_template('carga.html')
