@@ -105,12 +105,23 @@ def generar_filtrar():
     pagination = query.paginate(page=page, per_page=per_page, error_out=False)
     containers = pagination.items
     
-    return render_template('datos.html', 
-                         containers=containers, 
-                         pagination=pagination,
-                         current_sort=sort_by,
-                         current_order=order,
-                         per_page=per_page)
+    # Devolver solo las filas de la tabla (para HTMX)
+    html_rows = []
+    if containers and len(containers) > 0:
+        for c in containers:
+            html_rows.append(f'''<tr>
+<td scope="col">{c.containerNo}</td>
+<td scope="col">{c.iso}</td>
+<td scope="col">{c.grado}</td>
+<td scope="col">{c.status}</td>
+<td scope="col">{c.ofacc}</td>
+<td scope="col">{c.block}</td>
+<td scope="col">{c.traslado}</td>
+<td scope="col text-sm">{c.remark}</td>
+</tr>''')
+        return '\n'.join(html_rows)
+    else:
+        return '<tr><td colspan="8" class="text-center text-muted">No se encontraron contenedores con los filtros seleccionados</td></tr>'
 
 
 @main_bp.route('/cargar')

@@ -276,19 +276,28 @@
        // Recoger ISOS marcados
        const isoChecked = document.querySelectorAll('input[name="iso"]:checked');
        if (isoChecked.length > 0) {
-       filters['iso'] = Array.from(isoChecked).map(cb => cb.value);
+       isoChecked.forEach(cb => {
+       if (!filters['iso']) filters['iso'] = [];
+       filters['iso'].push(cb.value);
+       });
        }
 
        // Recoger grados marcados
        const gradoChecked = document.querySelectorAll('input[name="grado"]:checked');
        if (gradoChecked.length > 0) {
-       filters['grado'] = Array.from(gradoChecked).map(cb => cb.value);
+       gradoChecked.forEach(cb => {
+       if (!filters['grado']) filters['grado'] = [];
+       filters['grado'].push(cb.value);
+       });
        }
 
        // Recoger statuses marcados
        const statusChecked = document.querySelectorAll('input[name="status"]:checked');
        if (statusChecked.length > 0) {
-       filters['status'] = Array.from(statusChecked).map(cb => cb.value);
+       statusChecked.forEach(cb => {
+       if (!filters['status']) filters['status'] = [];
+       filters['status'].push(cb.value);
+       });
        }
 
        // Recoger OFAC si está marcado
@@ -305,11 +314,20 @@
        if (btnBuscar) {
        btnBuscar.addEventListener('click', function() {
        const filters = collectFilters();
-       const params = new URLSearchParams(filters);
+       const params = new URLSearchParams();
        
-       // Usar htmx.ajax para hacer la petición
+       // Agregar cada filtro como parámetro múltiple
+       for (const key in filters) {
+       if (Array.isArray(filters[key])) {
+       filters[key].forEach(val => params.append(key, val));
+       } else {
+       params.append(key, filters[key]);
+       }
+       }
+       
+       // Usar htmx.ajax para hacer la petición y actualizar solo el tbody
        htmx.ajax('GET', '/generar/filtrar?' + params.toString(), {
-       target: '#tabla-contenedores',
+       target: '#tabla-contenedores tbody',
        swap: 'innerHTML',
        indicator: '#spinner'
        });
