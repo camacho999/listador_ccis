@@ -3,10 +3,12 @@ Rutas de la aplicación CCIS.
 """
 
 import pandas as pd
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, Response
 from .models import Contenedor
 from . import db
 import os
+import csv
+import io
 
 # Obtener la ruta base del proyecto
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -59,9 +61,98 @@ def cargar():
 
 @main_bp.route('/generar')
 def generar():
-    """Generar lista completa de contenedores."""
-    containers = Contenedor.query.all()
-    return render_template('datos.html', containers=containers)
+    """Generar lista completa de contenedores con paginación y opción de exportación."""
+    # Obtener parámetros de paginación y ordenamiento
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 50, type=int)
+    sort_by = request.args.get('sort', 'containerNo')
+    order = request.args.get('order', 'asc')
+    
+    # Validar campos de ordenamiento permitidos
+    allowed_sort_fields = ['containerNo', 'iso', 'grado', 'status', 'days', 'ofacc', 'block', 'traslado']
+    if sort_by not in allowed_sort_fields:
+        sort_by = 'containerNo'
+    
+    # Validar dirección de ordenamiento
+    if order not in ['asc', 'desc']:
+        order = 'asc'
+    
+    # Obtener columna de ordenamiento
+    sort_column = getattr(Contenedor, sort_by, None)
+    if sort_column is None:
+        sort_column = Contenedor.containerNo
+    
+    # Aplicar ordenamiento
+    if order == 'desc':
+        sort_column = sort_column.desc()
+    
+    # Ejecutar consulta con paginación y ordenamiento
+    pagination = Contenedor.query.order_by(sort_column).paginate(
+        page=page, 
+        per_page=per_page, 
+        error_out=False
+    )
+    containers = pagination.items
+    
+    return render_template('datos.html', 
+                         containers=containers, 
+                         pagination=pagination,
+                         current_sort=sort_by,
+                         current_order=order,
+                         per_page=per_page)
+
+
+@main_bp.route('/generar/export')
+def generar_export():
+    """Exportar lista completa de contenedores a CSV."""
+    # Obtener todos los contenedores con ordenamiento
+    sort_by = request.args.get('sort', 'containerNo')
+    order = request.args.get('order', 'asc')
+    
+    allowed_sort_fields = ['containerNo', 'iso', 'grado', 'status', 'days', 'ofacc', 'block', 'traslado']
+    if sort_by not in allowed_sort_fields:
+        sort_by = 'containerNo'
+    
+    sort_column = getattr(Contenedor, sort_by, None)
+    if sort_column is None:
+        sort_column = Contenedor.containerNo
+    
+    if order == 'desc':
+        sort_column = sort_column.desc()
+    
+    containers = Contenedor.query.order_by(sort_column).all()
+    
+    # Crear archivo CSV en memoria
+    output = io.StringIO()
+    writer = csv.writer(output)
+    
+    # Escribir encabezados
+    writer.writerow(['Contenedor', 'ISO', 'Grade', 'Status', 'Days', 'OFAC', 'Block', 'Traslado', 'Remarks'])
+    
+    # Escribir datos
+    for c in containers:
+        writer.writerow([
+            c.containerNo,
+            c.iso,
+            c.grado,
+            c.status,
+            c.days,
+            c.ofacc,
+            c.block,
+            c.traslado,
+            c.remark
+        ])
+    
+    output.seek(0)
+    
+    # Crear respuesta para descargar archivo
+    return Response(
+        output.getvalue(),
+        mimetype='text/csv',
+        headers={
+            'Content-Disposition': f'attachment; filename=contenedores_{sort_by}_{order}.csv'
+        }
+    )
 
 
 @main_bp.route('/upload_inventario', methods=['POST'])
