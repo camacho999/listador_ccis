@@ -347,9 +347,9 @@ def update_blok():
                     print(f'El contenedor {fila["Container"]} no se encuentra en inventario')
 
         flash('El inventario se ha actualizado con los contenedores bloqueados.', 'success')
-        return redirect(url_for('cargar'))
+        return redirect(url_for('main.cargar'))
     
-    return redirect(url_for('cargar'))
+    return redirect(url_for('main.cargar'))
 
 
 @main_bp.route('/update_ofac', methods=['POST'])
@@ -384,9 +384,9 @@ def update_ofac():
             db.session.commit()
             flash(f'OFAC actualizado: {len(excel_total)} contenedores marcados', 'success')
         
-        return redirect(url_for('cargar'))
+        return redirect(url_for('main.cargar'))
     
-    return redirect(url_for('cargar'))
+    return redirect(url_for('main.cargar'))
 
 
 @main_bp.route('/traslado', methods=['POST'])
@@ -408,6 +408,6 @@ def traslado():
                     print(f'El contenedor {container.containerNo} actualizado a traslado')
             
             print(f'Actualización de contenedores de traslados completada')
-            return redirect(url_for('cargar'))
+            return redirect(url_for('main.cargar'))
     
-    return redirect(url_for('cargar'))
+    return redirect(url_for('main.cargar'))
