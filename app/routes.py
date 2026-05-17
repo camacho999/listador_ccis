@@ -53,6 +53,66 @@ def filtro():
     return render_template('filtro.html', containers=contenedores_filtrados)
 
 
+@main_bp.route('/generar/filtrar')
+def generar_filtrar():
+    """Generar lista de contenedores con filtros aplicados desde /generar."""
+    # Obtener arrays de valores INCLUIDOS (los marcados)
+    isos_incluidos = request.args.getlist('iso')
+    grados_incluidos = request.args.getlist('grado')
+    statuses_incluidos = request.args.getlist('status')
+    solo_ofac = request.args.get('ofacc')
+    
+    # Obtener parámetros de paginación y ordenamiento
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 50, type=int)
+    sort_by = request.args.get('sort', 'containerNo')
+    order = request.args.get('order', 'asc')
+    
+    # Validar campos de ordenamiento permitidos
+    allowed_sort_fields = ['containerNo', 'iso', 'grado', 'status', 'days', 'ofacc', 'block', 'traslado']
+    if sort_by not in allowed_sort_fields:
+        sort_by = 'containerNo'
+    
+    # Validar dirección de ordenamiento
+    if order not in ['asc', 'desc']:
+        order = 'asc'
+    
+    # Obtener columna de ordenamiento
+    sort_column = getattr(Contenedor, sort_by, None)
+    if sort_column is None:
+        sort_column = Contenedor.containerNo
+    
+    # Aplicar ordenamiento
+    if order == 'desc':
+        sort_column = sort_column.desc()
+    
+    # Construir consulta base
+    query = Contenedor.query.order_by(sort_column)
+    
+    # Aplicar filtros de INCLUSIÓN (IN) - solo si hay valores seleccionados
+    if isos_incluidos:
+        query = query.filter(Contenedor.iso.in_(isos_incluidos))
+    if grados_incluidos:
+        query = query.filter(Contenedor.grado.in_(grados_incluidos))
+    if statuses_incluidos:
+        query = query.filter(Contenedor.status.in_(statuses_incluidos))
+    
+    # Filtro OFAC - solo mostrar los que tienen ofacc = 'Y'
+    if solo_ofac == 'Y':
+        query = query.filter(Contenedor.ofacc == 'Y')
+    
+    # Ejecutar consulta con paginación
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+    containers = pagination.items
+    
+    return render_template('datos.html', 
+                         containers=containers, 
+                         pagination=pagination,
+                         current_sort=sort_by,
+                         current_order=order,
+                         per_page=per_page)
+
+
 @main_bp.route('/cargar')
 def cargar():
     """Página para carga de archivos."""
@@ -104,8 +164,14 @@ def generar():
 
 @main_bp.route('/generar/export')
 def generar_export():
-    """Exportar lista completa de contenedores a CSV."""
-    # Obtener todos los contenedores con ordenamiento
+    """Exportar lista completa de contenedores a CSV (con filtros opcionales)."""
+    # Obtener arrays de valores INCLUIDOS (los marcados) para filtros
+    isos_incluidos = request.args.getlist('iso')
+    grados_incluidos = request.args.getlist('grado')
+    statuses_incluidos = request.args.getlist('status')
+    solo_ofac = request.args.get('ofacc')
+    
+    # Obtener parámetros de ordenamiento
     sort_by = request.args.get('sort', 'containerNo')
     order = request.args.get('order', 'asc')
     
@@ -120,7 +186,22 @@ def generar_export():
     if order == 'desc':
         sort_column = sort_column.desc()
     
-    containers = Contenedor.query.order_by(sort_column).all()
+    # Construir consulta base
+    query = Contenedor.query.order_by(sort_column)
+    
+    # Aplicar filtros de INCLUSIÓN (IN) - solo si hay valores seleccionados
+    if isos_incluidos:
+        query = query.filter(Contenedor.iso.in_(isos_incluidos))
+    if grados_incluidos:
+        query = query.filter(Contenedor.grado.in_(grados_incluidos))
+    if statuses_incluidos:
+        query = query.filter(Contenedor.status.in_(statuses_incluidos))
+    
+    # Filtro OFAC - solo mostrar los que tienen ofacc = 'Y'
+    if solo_ofac == 'Y':
+        query = query.filter(Contenedor.ofacc == 'Y')
+    
+    containers = query.all()
     
     # Crear archivo CSV en memoria
     output = io.StringIO()
