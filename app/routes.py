@@ -146,13 +146,9 @@ def generar():
     if order == 'desc':
         sort_column = sort_column.desc()
     
-    # Ejecutar consulta con paginación y ordenamiento
-    pagination = Contenedor.query.order_by(sort_column).paginate(
-        page=page, 
-        per_page=per_page, 
-        error_out=False
-    )
-    containers = pagination.items
+    # Ejecutar consulta con paginación y ordenamiento (sin datos iniciales)
+    pagination = None
+    containers = []
     
     return render_template('datos.html', 
                          containers=containers, 
