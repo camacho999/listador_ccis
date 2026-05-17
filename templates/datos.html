@@ -43,19 +43,19 @@
 					
 					<div class="col">
 						<div class="form-check">
-  							<input class="form-check-input" type="checkbox" name="iso" value="42G1" id="iso_42G1" checked checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<input class="form-check-input" type="checkbox" name="iso" value="42G1" id="iso_42G1" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
   							<label class="form-check-label" for="iso_22G1">42G1</label>
 						</div>
 						<div class="form-check">
-  							<input class="form-check-input" type="checkbox" value="42U1" name="iso" id="iso_42U1" checked checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<input class="form-check-input" type="checkbox" value="42U1" name="iso" id="iso_42U1" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
   							<label class="form-check-label" for="iso_42U1">42U1</label>
 						</div>
 						<div class="form-check">
-  							<input class="form-check-input" type="checkbox" name="iso" value="42P3" id="iso_42P3" checked checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<input class="form-check-input" type="checkbox" name="iso" value="42P3" id="iso_42P3" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
   							<label class="form-check-label" for="iso_42P3">42P3</label>
 						</div>
 						<div class="form-check">
-  							<input class="form-check-input" type="checkbox" name="iso" value="45R1" id="iso_45R1" checked checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
+  							<input class="form-check-input" type="checkbox" name="iso" value="45R1" id="iso_45R1" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
   							<label class="form-check-label" for="iso_45R1">45R1</label>
 						</div>
 					</div>
@@ -162,7 +162,7 @@
   							<label class="form-check-label" for="grado_SALE">SALE</label>
 						</div>
 						<div class="form-check">
-  							<input class="form-check-input" type="checkbox" value="PHARMA" id="grado_PHARMA" name="grado" checked>
+  							<input class="form-check-input" type="checkbox" value="PHARMA" id="grado_PHARMA" name="grado" checked hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
   							<label class="form-check-label" for="grado_PHARMA">PHARMA</label>
 						</div>
 						<div class="form-check">
@@ -182,7 +182,7 @@
 			<div class="row justify-content-center mt-2">
 					<div class="col-3">
 						<div class="form-check">
-  							<input class="form-check-input" type="checkbox" value="N" id="y_ofacc" name="ofacc" >
+  							<input class="form-check-input" type="checkbox" value="Y" id="y_ofacc" name="ofacc" hx-get="/filtro" hx-target="#tabla-contenedores" hx-trigger="change" hx-indicator="#spinner">
   							<label class="form-check-label" for="y_ofacc">OFAC C</label>
 						</div>
 					</div>
@@ -269,34 +269,79 @@
 	
 <script>
        document.addEventListener('DOMContentLoaded', function() {
-       	document.body.addEventListener('htmx:configRequest', function(event) {
-	        // Enviar los checkboxes DESMARCADOS (excluidos)
-	        const checkboxesNoMarcados = document.querySelectorAll('input[type="checkbox"]:not(:checked)');
-	        const excluidos = {};
-        
-        	checkboxesNoMarcados.forEach(checkbox => {
-	            const name = checkbox.name;
-	            if (!excluidos[name]) {
-	                excluidos[name] = [];
-	            }
-	            excluidos[name].push(checkbox.value);
-        	});
-        
-        // Agregar parámetros a la solicitud HTMX
-        	for (const key in excluidos) {
-            	event.detail.parameters[key] = excluidos[key];
-        	}
-    	});
-	});
+       // Función para recolectar todos los filtros activos (checkboxes marcados)
+       function collectFilters() {
+       const filters = {};
+       
+       // Recoger ISOS marcados
+       const isoChecked = document.querySelectorAll('input[name="iso"]:checked');
+       if (isoChecked.length > 0) {
+       filters['iso'] = Array.from(isoChecked).map(cb => cb.value);
+       }
+       
+       // Recoger grados marcados
+       const gradoChecked = document.querySelectorAll('input[name="grado"]:checked');
+       if (gradoChecked.length > 0) {
+       filters['grado'] = Array.from(gradoChecked).map(cb => cb.value);
+       }
+       
+       // Recoger statuses marcados
+       const statusChecked = document.querySelectorAll('input[name="status"]:checked');
+       if (statusChecked.length > 0) {
+       filters['status'] = Array.from(statusChecked).map(cb => cb.value);
+       }
+       
+       // Recoger OFAC si está marcado
+       const ofaccChecked = document.querySelector('input[name="ofacc"]:checked');
+       if (ofaccChecked) {
+       filters['ofacc'] = ofaccChecked.value;
+       }
+       
+       return filters;
+       }
+       
+       // Configurar cada checkbox individualmente para enviar los filtros correctos
+       document.querySelectorAll('input[type="checkbox"][name="iso"], input[type="checkbox"][name="grado"], input[type="checkbox"][name="status"], input[type="checkbox"][name="ofacc"]').forEach(checkbox => {
+       checkbox.addEventListener('change', function() {
+       const filters = collectFilters();
+       
+       // Construir URL con parámetros
+       const params = new URLSearchParams(filters);
+       
+       // Actualizar el atributo hx-get con los parámetros correctos
+       this.setAttribute('hx-get', '/filtro?' + params.toString());
+       });
+       });
+       
+       // También actualizar el botón "Todos"
+       const btnTodos = document.querySelector('button[hx-get="/filtro"]');
+       if (btnTodos) {
+       btnTodos.addEventListener('click', function() {
+       // Marcar todos los checkboxes excepto ofacc
+       document.querySelectorAll('input[type="checkbox"][name="iso"], input[type="checkbox"][name="grado"], input[type="checkbox"][name="status"]').forEach(cb => {
+       cb.checked = true;
+       });
+       // Desmarcar ofacc
+       const ofaccCb = document.querySelector('input[name="ofacc"]');
+       if (ofaccCb) {
+       ofaccCb.checked = false;
+       }
+       // Disparar evento change en todos los checkboxes para actualizar URLs
+       document.querySelectorAll('input[type="checkbox"][name="iso"], input[type="checkbox"][name="grado"], input[type="checkbox"][name="status"]').forEach(cb => {
+       cb.dispatchEvent(new Event('change'));
+       });
+       });
+       }
+       });
 
        function reset() {
-    		// Marcar todos los checkboxes
-    		document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-    		    checkbox.checked = true;
-    		});
-    		// Disparar HTMX para recargar
-    		//htmx.trigger('input[type="checkbox"]', 'change');
-		}
+   // Marcar todos los checkboxes
+   document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+       checkbox.checked = true;
+   });
+   // Disparar HTMX para recargar
+   //htmx.trigger('input[type="checkbox"]', 'change');
+}
 
     </script>
 
