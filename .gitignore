@@ -1,1 +1,4 @@
-Nothing should be ignored based on the provided file changes. The only modified file is 'templates/datos.html', which is a template file and not a build artifact, dependency, or temporary file. Therefore, no additional entries are needed in the .gitignore file.
+```
+__pycache__/
+*.pyc
+```
