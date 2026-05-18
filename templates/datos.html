@@ -226,7 +226,9 @@
                         <span class="text-muted">Página {{ pagination.page }} de {{ pagination.pages }} ({{ pagination.total }} registros)</span>
                 </div>
                 <div class="col-md-3 text-end">
-                        <a href="{{ url_for('main.generar_export', sort=current_sort, order=current_order, **request.args.to_dict(flat=False)) }}" class="btn btn-sm btn-success">
+                        {% set export_params = request.args.to_dict(flat=False) %}
+                        {% set export_params = dict(export_params, sort=current_sort, order=current_order) %}
+                        <a href="{{ url_for('main.generar_export', **export_params) }}" class="btn btn-sm btn-success">
                                 Exportar CSV
                         </a>
                 </div>
