@@ -196,50 +196,17 @@
 		</div>
 		
 		<hr>
-	<div class="loading" id="spinner" style="display: none;"> Cargando ...</div>	
-
-        <!-- Controles de paginación y exportación -->
-        {% if pagination %}
-        {% set base_args = request.args.to_dict(flat=False) %}
-        {# Eliminar parámetros de paginación y ordenamiento para reconstruirlos limpiamente #}
-        {% set _ = base_args.pop('page', None) %}
-        {% set _ = base_args.pop('per_page', None) %}
-        {% set _ = base_args.pop('sort', None) %}
-        {% set _ = base_args.pop('order', None) %}
-        
+        <!-- Controles de exportación -->
         <div class="row mb-3 align-items-center">
-                <div class="col-md-6">
-                        <nav aria-label="Paginación">
-                                <ul class="pagination pagination-sm mb-0">
-                                        <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
-                                                <a class="page-link" href="{{ url_for('main.generar', page=pagination.prev_num, per_page=per_page, sort=current_sort, order=current_order, **base_args) }}" {% if not pagination.has_prev %}tabindex="-1" aria-disabled="true"{% endif %}>Anterior</a>
-                                        </li>
-                                        {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
-                                                {% if page_num %}
-                                                        <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
-                                                                <a class="page-link" href="{{ url_for('main.generar', page=page_num, per_page=per_page, sort=current_sort, order=current_order, **base_args) }}">{{ page_num }}</a>
-                                                        </li>
-                                                {% else %}
-                                                        <li class="page-item disabled"><span class="page-link">...</span></li>
-                                                {% endif %}
-                                        {% endfor %}
-                                        <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
-                                                <a class="page-link" href="{{ url_for('main.generar', page=pagination.next_num, per_page=per_page, sort=current_sort, order=current_order, **base_args) }}" {% if not pagination.has_next %}tabindex="-1" aria-disabled="true"{% endif %}>Siguiente</a>
-                                        </li>
-                                </ul>
-                        </nav>
+                <div class="col-md-6 text-start">
+                        <span class="text-muted">{{ containers|length }} registros encontrados</span>
                 </div>
-                <div class="col-md-3 text-center">
-                        <span class="text-muted">Página {{ pagination.page }} de {{ pagination.pages }} ({{ pagination.total }} registros)</span>
-                </div>
-                <div class="col-md-3 text-end">
-                        {% set export_params = dict(base_args, sort=current_sort, order=current_order) %}
-                        <a href="{{ url_for('main.generar_export', **export_params) }}" class="btn btn-sm btn-success">
+                <div class="col-md-6 text-end">
+                        <a href="{{ url_for('main.generar_export', iso=request.args.getlist('iso'), grado=request.args.getlist('grado'), status=request.args.getlist('status'), ofacc=request.args.get('ofacc'), sort=current_sort, order=current_order) }}" class="btn btn-sm btn-success">
                                 Exportar CSV
                         </a>
                 </div>
         </div>
-        {% endif %}
 	<table class="table table-sm" id="tabla-contenedores">
 		<thead>
 			<tr>
@@ -333,7 +300,7 @@
        }
        }
        
-       // Redireccionar a /generar con los filtros para que la paginación funcione correctamente
+       // Redireccionar a /generar con los filtros
        window.location.href = '/generar?' + params.toString();
        });
        }

@@ -112,9 +112,7 @@ def generar_filtrar():
     statuses_incluidos = request.args.getlist('status')
     solo_ofac = request.args.get('ofacc')
     
-    # Obtener parámetros de paginación y ordenamiento
-    page = request.args.get('page', 1, type=int)
-    per_page = request.args.get('per_page', 50, type=int)
+    # Obtener parámetros de ordenamiento
     sort_by = request.args.get('sort', 'containerNo')
     order = request.args.get('order', 'asc')
     
@@ -132,9 +130,8 @@ def generar_filtrar():
     # Usar función centralizada para construir la consulta
     query = build_contenedores_query(filters=filters, sort_by=sort_by, order=order)
     
-    # Ejecutar consulta con paginación
-    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
-    containers = pagination.items
+    # Ejecutar consulta sin paginación
+    containers = query.all()
     
     # Devolver solo las filas de la tabla (para HTMX)
     html_rows = []
@@ -190,29 +187,38 @@ def cargar():
 
 @main_bp.route('/generar')
 def generar():
-    """Generar lista completa de contenedores con paginación y opción de exportación."""
-    # Obtener parámetros de paginación y ordenamiento
-    page = request.args.get('page', 1, type=int)
-    per_page = request.args.get('per_page', 50, type=int)
+    """Generar lista completa de contenedores con opción de exportación (sin paginación)."""
+    # Obtener arrays de valores INCLUIDOS (los marcados) para filtros
+    isos_incluidos = request.args.getlist('iso')
+    grados_incluidos = request.args.getlist('grado')
+    statuses_incluidos = request.args.getlist('status')
+    solo_ofac = request.args.get('ofacc')
+    
+    # Obtener parámetros de ordenamiento
     sort_by = request.args.get('sort', 'containerNo')
     order = request.args.get('order', 'asc')
     
-    # Construir filtros vacíos para carga inicial (sin filtros)
+    # Construir filtros
     filters = {}
+    if isos_incluidos:
+        filters['iso'] = isos_incluidos
+    if grados_incluidos:
+        filters['grado'] = grados_incluidos
+    if statuses_incluidos:
+        filters['status'] = statuses_incluidos
+    if solo_ofac:
+        filters['ofacc'] = solo_ofac
     
     # Usar función centralizada para construir la consulta
     query = build_contenedores_query(filters=filters, sort_by=sort_by, order=order)
     
-    # Ejecutar consulta con paginación
-    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
-    containers = pagination.items
+    # Ejecutar consulta sin paginación
+    containers = query.all()
     
     return render_template('datos.html', 
-                         containers=containers, 
-                         pagination=pagination,
+                         containers=containers,
                          current_sort=sort_by,
-                         current_order=order,
-                         per_page=per_page)
+                         current_order=order)
 
 
 @main_bp.route('/generar/export')
