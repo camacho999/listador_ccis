@@ -333,12 +333,8 @@
        }
        }
        
-       // Usar htmx.ajax para hacer la petición y actualizar solo el tbody
-       htmx.ajax('GET', '/generar/filtrar?' + params.toString(), {
-       target: '#tabla-contenedores tbody',
-       swap: 'innerHTML',
-       indicator: '#spinner'
-       });
+       // Redireccionar a /generar con los filtros para que la paginación funcione correctamente
+       window.location.href = '/generar?' + params.toString();
        });
        }
        });
