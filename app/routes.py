@@ -124,8 +124,6 @@ def generar_filtrar():
         return '<tr><td colspan="8" class="text-center text-muted">No se encontraron contenedores con los filtros seleccionados</td></tr>'
 
 
-@main_bp.route('/cargar')
-
 @main_bp.route('/generar/buscar/<container_no>')
 def buscar_contenedor(container_no):
     """Buscar un contenedor específico por número."""
@@ -151,6 +149,9 @@ def buscar_contenedor(container_no):
         })
     
     return {'containers': result, 'count': len(result)}
+
+
+@main_bp.route('/cargar')
 def cargar():
     """Página para carga de archivos."""
     return render_template('carga.html')
