@@ -200,24 +200,31 @@
 
         <!-- Controles de paginación y exportación -->
         {% if pagination %}
+        {% set base_args = request.args.to_dict(flat=False) %}
+        {# Eliminar parámetros de paginación y ordenamiento para reconstruirlos limpiamente #}
+        {% set _ = base_args.pop('page', None) %}
+        {% set _ = base_args.pop('per_page', None) %}
+        {% set _ = base_args.pop('sort', None) %}
+        {% set _ = base_args.pop('order', None) %}
+        
         <div class="row mb-3 align-items-center">
                 <div class="col-md-6">
                         <nav aria-label="Paginación">
                                 <ul class="pagination pagination-sm mb-0">
                                         <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
-                                                <a class="page-link" href="{{ url_for('main.generar', page=pagination.prev_num, per_page=per_page, sort=current_sort, order=current_order, **request.args.to_dict(flat=False)) }}" {% if not pagination.has_prev %}tabindex="-1" aria-disabled="true"{% endif %}>Anterior</a>
+                                                <a class="page-link" href="{{ url_for('main.generar', page=pagination.prev_num, per_page=per_page, sort=current_sort, order=current_order, **base_args) }}" {% if not pagination.has_prev %}tabindex="-1" aria-disabled="true"{% endif %}>Anterior</a>
                                         </li>
                                         {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
                                                 {% if page_num %}
                                                         <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
-                                                                <a class="page-link" href="{{ url_for('main.generar', page=page_num, per_page=per_page, sort=current_sort, order=current_order, **request.args.to_dict(flat=False)) }}">{{ page_num }}</a>
+                                                                <a class="page-link" href="{{ url_for('main.generar', page=page_num, per_page=per_page, sort=current_sort, order=current_order, **base_args) }}">{{ page_num }}</a>
                                                         </li>
                                                 {% else %}
                                                         <li class="page-item disabled"><span class="page-link">...</span></li>
                                                 {% endif %}
                                         {% endfor %}
                                         <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
-                                                <a class="page-link" href="{{ url_for('main.generar', page=pagination.next_num, per_page=per_page, sort=current_sort, order=current_order, **request.args.to_dict(flat=False)) }}" {% if not pagination.has_next %}tabindex="-1" aria-disabled="true"{% endif %}>Siguiente</a>
+                                                <a class="page-link" href="{{ url_for('main.generar', page=pagination.next_num, per_page=per_page, sort=current_sort, order=current_order, **base_args) }}" {% if not pagination.has_next %}tabindex="-1" aria-disabled="true"{% endif %}>Siguiente</a>
                                         </li>
                                 </ul>
                         </nav>
@@ -226,8 +233,7 @@
                         <span class="text-muted">Página {{ pagination.page }} de {{ pagination.pages }} ({{ pagination.total }} registros)</span>
                 </div>
                 <div class="col-md-3 text-end">
-                        {% set export_params = request.args.to_dict(flat=False) %}
-                        {% set export_params = dict(export_params, sort=current_sort, order=current_order) %}
+                        {% set export_params = dict(base_args, sort=current_sort, order=current_order) %}
                         <a href="{{ url_for('main.generar_export', **export_params) }}" class="btn btn-sm btn-success">
                                 Exportar CSV
                         </a>
