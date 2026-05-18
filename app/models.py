@@ -10,16 +10,16 @@ class Contenedor(db.Model):
     __tablename__ = 'contenedor'
     
     id = db.Column(db.Integer, primary_key=True)
-    containerNo = db.Column(db.String(200), nullable=False)
-    iso = db.Column(db.String(100))
-    grado = db.Column(db.String(50))
-    status = db.Column(db.String(50))
+    containerNo = db.Column(db.String(200), nullable=False, index=True)
+    iso = db.Column(db.String(100), index=True)
+    grado = db.Column(db.String(50), index=True)
+    status = db.Column(db.String(50), index=True)
     days = db.Column(db.Integer)
     remark = db.Column(db.String(200))
-    ofacc = db.Column(db.String(2), default='N')
-    block = db.Column(db.String(2), default='N')
-    traslado = db.Column(db.String(2), default='N')
-    active = db.Column(db.String(2), default='Y')
+    ofacc = db.Column(db.String(2), default='N', index=True)
+    block = db.Column(db.String(2), default='N', index=True)
+    traslado = db.Column(db.String(2), default='N', index=True)
+    active = db.Column(db.String(2), default='Y', index=True)
     
     def __repr__(self):
         return f'<Contenedor {self.containerNo}>'

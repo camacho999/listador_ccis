@@ -3,7 +3,7 @@ Rutas de la aplicación CCIS.
 """
 
 import pandas as pd
-from flask import Blueprint, render_template, request, redirect, url_for, flash, Response
+from flask import Blueprint, render_template, request, redirect, url_for, flash, Response, stream_with_context
 from .models import Contenedor
 from . import db
 import os
@@ -14,6 +14,56 @@ import io
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 main_bp = Blueprint('main', __name__, template_folder=os.path.join(BASE_DIR, 'templates'))
+
+
+def build_contenedores_query(filters=None, sort_by='containerNo', order='asc'):
+    """
+    Construir consulta de contenedores con filtros y ordenamiento.
+    
+    Args:
+        filters: Diccionario con filtros opcionales (iso, grado, status, ofacc)
+        sort_by: Campo por el cual ordenar
+        order: Dirección del ordenamiento ('asc' o 'desc')
+    
+    Returns:
+        Query object de SQLAlchemy
+    """
+    if filters is None:
+        filters = {}
+    
+    # Validar campos de ordenamiento permitidos
+    allowed_sort_fields = ['containerNo', 'iso', 'grado', 'status', 'days', 'ofacc', 'block', 'traslado']
+    if sort_by not in allowed_sort_fields:
+        sort_by = 'containerNo'
+    
+    # Validar dirección de ordenamiento
+    if order not in ['asc', 'desc']:
+        order = 'asc'
+    
+    # Obtener columna de ordenamiento
+    sort_column = getattr(Contenedor, sort_by, None)
+    if sort_column is None:
+        sort_column = Contenedor.containerNo
+    
+    # Aplicar ordenamiento
+    if order == 'desc':
+        query = Contenedor.query.order_by(sort_column.desc())
+    else:
+        query = Contenedor.query.order_by(sort_column)
+    
+    # Aplicar filtros de INCLUSIÓN (IN) - solo si hay valores seleccionados
+    if filters.get('iso'):
+        query = query.filter(Contenedor.iso.in_(filters['iso']))
+    if filters.get('grado'):
+        query = query.filter(Contenedor.grado.in_(filters['grado']))
+    if filters.get('status'):
+        query = query.filter(Contenedor.status.in_(filters['status']))
+    
+    # Filtro OFAC - solo mostrar los que tienen ofacc = 'Y'
+    if filters.get('ofacc') == 'Y':
+        query = query.filter(Contenedor.ofacc == 'Y')
+    
+    return query
 
 
 @main_bp.route('/')
@@ -68,38 +118,19 @@ def generar_filtrar():
     sort_by = request.args.get('sort', 'containerNo')
     order = request.args.get('order', 'asc')
     
-    # Validar campos de ordenamiento permitidos
-    allowed_sort_fields = ['containerNo', 'iso', 'grado', 'status', 'days', 'ofacc', 'block', 'traslado']
-    if sort_by not in allowed_sort_fields:
-        sort_by = 'containerNo'
-    
-    # Validar dirección de ordenamiento
-    if order not in ['asc', 'desc']:
-        order = 'asc'
-    
-    # Obtener columna de ordenamiento
-    sort_column = getattr(Contenedor, sort_by, None)
-    if sort_column is None:
-        sort_column = Contenedor.containerNo
-    
-    # Aplicar ordenamiento
-    if order == 'desc':
-        sort_column = sort_column.desc()
-    
-    # Construir consulta base
-    query = Contenedor.query.order_by(sort_column)
-    
-    # Aplicar filtros de INCLUSIÓN (IN) - solo si hay valores seleccionados
+    # Construir filtros
+    filters = {}
     if isos_incluidos:
-        query = query.filter(Contenedor.iso.in_(isos_incluidos))
+        filters['iso'] = isos_incluidos
     if grados_incluidos:
-        query = query.filter(Contenedor.grado.in_(grados_incluidos))
+        filters['grado'] = grados_incluidos
     if statuses_incluidos:
-        query = query.filter(Contenedor.status.in_(statuses_incluidos))
+        filters['status'] = statuses_incluidos
+    if solo_ofac:
+        filters['ofacc'] = solo_ofac
     
-    # Filtro OFAC - solo mostrar los que tienen ofacc = 'Y'
-    if solo_ofac == 'Y':
-        query = query.filter(Contenedor.ofacc == 'Y')
+    # Usar función centralizada para construir la consulta
+    query = build_contenedores_query(filters=filters, sort_by=sort_by, order=order)
     
     # Ejecutar consulta con paginación
     pagination = query.paginate(page=page, per_page=per_page, error_out=False)
@@ -166,27 +197,15 @@ def generar():
     sort_by = request.args.get('sort', 'containerNo')
     order = request.args.get('order', 'asc')
     
-    # Validar campos de ordenamiento permitidos
-    allowed_sort_fields = ['containerNo', 'iso', 'grado', 'status', 'days', 'ofacc', 'block', 'traslado']
-    if sort_by not in allowed_sort_fields:
-        sort_by = 'containerNo'
+    # Construir filtros vacíos para carga inicial (sin filtros)
+    filters = {}
     
-    # Validar dirección de ordenamiento
-    if order not in ['asc', 'desc']:
-        order = 'asc'
+    # Usar función centralizada para construir la consulta
+    query = build_contenedores_query(filters=filters, sort_by=sort_by, order=order)
     
-    # Obtener columna de ordenamiento
-    sort_column = getattr(Contenedor, sort_by, None)
-    if sort_column is None:
-        sort_column = Contenedor.containerNo
-    
-    # Aplicar ordenamiento
-    if order == 'desc':
-        sort_column = sort_column.desc()
-    
-    # Ejecutar consulta con paginación y ordenamiento (sin datos iniciales)
-    pagination = None
-    containers = []
+    # Ejecutar consulta con paginación
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+    containers = pagination.items
     
     return render_template('datos.html', 
                          containers=containers, 
@@ -209,31 +228,19 @@ def generar_export():
     sort_by = request.args.get('sort', 'containerNo')
     order = request.args.get('order', 'asc')
     
-    allowed_sort_fields = ['containerNo', 'iso', 'grado', 'status', 'days', 'ofacc', 'block', 'traslado']
-    if sort_by not in allowed_sort_fields:
-        sort_by = 'containerNo'
-    
-    sort_column = getattr(Contenedor, sort_by, None)
-    if sort_column is None:
-        sort_column = Contenedor.containerNo
-    
-    if order == 'desc':
-        sort_column = sort_column.desc()
-    
-    # Construir consulta base
-    query = Contenedor.query.order_by(sort_column)
-    
-    # Aplicar filtros de INCLUSIÓN (IN) - solo si hay valores seleccionados
+    # Construir filtros
+    filters = {}
     if isos_incluidos:
-        query = query.filter(Contenedor.iso.in_(isos_incluidos))
+        filters['iso'] = isos_incluidos
     if grados_incluidos:
-        query = query.filter(Contenedor.grado.in_(grados_incluidos))
+        filters['grado'] = grados_incluidos
     if statuses_incluidos:
-        query = query.filter(Contenedor.status.in_(statuses_incluidos))
+        filters['status'] = statuses_incluidos
+    if solo_ofac:
+        filters['ofacc'] = solo_ofac
     
-    # Filtro OFAC - solo mostrar los que tienen ofacc = 'Y'
-    if solo_ofac == 'Y':
-        query = query.filter(Contenedor.ofacc == 'Y')
+    # Usar función centralizada para construir la consulta
+    query = build_contenedores_query(filters=filters, sort_by=sort_by, order=order)
     
     containers = query.all()
     
